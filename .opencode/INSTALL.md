@@ -13,7 +13,17 @@ For users upgrading from a pre-8.0.0 install, replace the old package entry
 symlinks or clone as described in the migration section, then follow these
 install instructions.
 
-Add RubyPowers to the `plugin` array in your `opencode.json` (global or project-level):
+Add RubyPowers to your `opencode.json` (global or project-level).
+
+OpenCode 2.x uses the `plugins` key:
+
+```json
+{
+  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git"]
+}
+```
+
+OpenCode 1.x (1.18.29 or newer) uses the `plugin` key:
 
 ```json
 {
@@ -60,11 +70,11 @@ use skill tool to load rubypowers/brainstorming
 
 RubyPowers updates automatically when you restart OpenCode.
 
-To pin a specific version:
+To pin a specific version (use `plugin` instead of `plugins` on OpenCode 1.x):
 
 ```json
 {
-  "plugin": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.1"]
+  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.1"]
 }
 ```
 
@@ -73,8 +83,8 @@ To pin a specific version:
 ### Plugin not loading
 
 1. Check logs: `opencode run --print-logs "hello" 2>&1 | grep -i rubypowers`
-2. Verify the plugin line in your `opencode.json`
-3. Make sure you're running a recent version of OpenCode
+2. Verify the plugin line in your `opencode.json`. OpenCode 2.x reads `plugins`, 1.x reads `plugin`.
+3. Make sure you're running OpenCode 2.x, or 1.18.29 or newer
 
 ### Skills not found
 
