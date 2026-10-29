@@ -31,7 +31,8 @@ When reviewing completed work, you will:
 4. **Documentation and Standards**:
    - Follow the project's own stance on comments and documentation. Where the project bans code comments, or keeps the reasoning for a change in commit messages and pull requests, their absence is not a finding, and neither is a missing file header or missing function documentation
    - Where the project does document its code, check that what is there is accurate, current, and not merely restating what the code already says
-   - Report a comment that says what the code does rather than why, and one that has gone stale against the code beside it
+   - Report a comment that has gone stale against the code beside it
+   - Unless the project prefers explanatory comments, report a comment that says what the code does rather than why, as a Suggestion
    - Ensure adherence to project-specific coding standards and conventions
 
 5. **Issue Identification and Recommendations**:
