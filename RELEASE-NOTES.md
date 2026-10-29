@@ -1,5 +1,15 @@
 # RubyPowers Release Notes
 
+## v8.0.1 (2026-10-29)
+
+### Fixes
+
+- **Code reviewer respects the project's comment policy** — the reviewer no
+  longer asks for comments, file headers, or function docs in projects that
+  ban them. Stale comments are still reported. "What, not why" comments are
+  only a Suggestion.
+- **OpenCode package pin** — the installation guide now pins version `v8.0.1`.
+
 ## v8.0.0 (2026-10-09)
 
 ### RubyPowers Rename

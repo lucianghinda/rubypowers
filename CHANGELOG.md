@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+## [8.0.1] - 2026-10-29
+
+### Fixed
+
+- **code-reviewer agent — comment rules now follow the project**: Section 4
+  required comments, file headers, and function docs in every project. In
+  projects that ban comments, the reviewer reported their absence after each
+  task, and `receiving-code-review` added them back. The reviewer now follows
+  the project's own stance: missing comments are not a finding where the
+  project bans them. Stale comments are still reported. Comments that say what
+  instead of why are reported only as a Suggestion, and not at all when the
+  project prefers explanatory comments. (#25, thanks @viktorianer)
+
 ## [8.0.0] - 2026-10-09
 
 ### Changed

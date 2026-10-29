@@ -64,7 +64,7 @@ To pin a specific version:
 
 ```json
 {
-  "plugin": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.0"]
+  "plugin": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.1"]
 }
 ```
 
