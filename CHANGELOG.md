@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## [8.0.2] - 2026-10-29
+
+### Fixed
+
+- **OpenCode 2.x support**: OpenCode 2.x refused to load the plugin because it
+  needs a default export with an `id` and a `setup` function, and the plugin
+  only had the V1 named export. The plugin now default-exports
+  `{ id, setup, server }`. `setup` uses the V2 API: it adds each skill with
+  `ctx.skill.transform`, adds the bootstrap to the system prompt with the
+  `context` hook, and keeps the handoff across compaction with the
+  `compaction` hook. `server()` keeps the V1 hooks for OpenCode 1.18.29+. The
+  install guides now show the V2 `plugins` key next to the V1 `plugin` key.
+  (#27, reported by @4tolexx)
+
 ## [8.0.1] - 2026-10-29
 
 ### Fixed

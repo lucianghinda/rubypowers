@@ -1,5 +1,14 @@
 # RubyPowers Release Notes
 
+## v8.0.2 (2026-10-29)
+
+### Fixes
+
+- **OpenCode 2.x support** — the plugin now loads on OpenCode 2.x. It uses the
+  V2 plugin API and still supports OpenCode 1.18.29 or newer. On 2.x, use the
+  `plugins` key in `opencode.json` instead of `plugin`.
+- **OpenCode package pin** — the installation guide now pins version `v8.0.2`.
+
 ## v8.0.1 (2026-10-29)
 
 ### Fixes

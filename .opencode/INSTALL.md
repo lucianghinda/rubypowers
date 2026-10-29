@@ -74,7 +74,7 @@ To pin a specific version (use `plugin` instead of `plugins` on OpenCode 1.x):
 
 ```json
 {
-  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.1"]
+  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.2"]
 }
 ```
 
