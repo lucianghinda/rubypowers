@@ -7,8 +7,8 @@
     {
       "name": "rubypowers",
       "source": {
-        "source": "local",
-        "path": "./plugins/rubypowers"
+        "source": "url",
+        "url": "./"
       },
       "policy": {
         "installation": "AVAILABLE",
