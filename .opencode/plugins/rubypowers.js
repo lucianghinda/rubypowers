@@ -27,13 +27,21 @@ const extractAndStripFrontmatter = (content) => {
   const body = match[2];
   const frontmatter = {};
 
-  for (const line of frontmatterStr.split('\n')) {
+  const lines = frontmatterStr.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const colonIdx = line.indexOf(':');
-    if (colonIdx > 0) {
-      const key = line.slice(0, colonIdx).trim();
-      const value = line.slice(colonIdx + 1).trim().replace(/^["']|["']$/g, '');
-      frontmatter[key] = value;
+    if (colonIdx <= 0 || /^\s/.test(line)) continue;
+    const key = line.slice(0, colonIdx).trim();
+    let value = line.slice(colonIdx + 1).trim();
+    // YAML block scalar (>, >-, |, |-): the value is on the following indented lines
+    const block = value.match(/^([>|])-?$/);
+    if (block) {
+      const parts = [];
+      while (i + 1 < lines.length && /^\s/.test(lines[i + 1])) parts.push(lines[++i].trim());
+      value = parts.join(block[1] === '>' ? ' ' : '\n');
     }
+    frontmatter[key] = value.replace(/^["']|["']$/g, '');
   }
 
   return { frontmatter, content: body };
