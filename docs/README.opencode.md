@@ -8,7 +8,17 @@ Users upgrading from a pre-8.0.0 install should replace the old plugin line
 with the RubyPowers line below, clean up the old symlink or clone paths, and
 then follow these installation steps.
 
-Add RubyPowers to the `plugin` array in your `opencode.json` (global or project-level):
+Add RubyPowers to your `opencode.json` (global or project-level).
+
+OpenCode 2.x uses the `plugins` key:
+
+```json
+{
+  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git"]
+}
+```
+
+OpenCode 1.x (1.18.29 or newer) uses the `plugin` key:
 
 ```json
 {
@@ -88,20 +98,29 @@ Create project-specific skills in `.opencode/skills/` within your project.
 
 RubyPowers updates automatically when you restart OpenCode. The plugin is re-installed from the git repository on each launch.
 
-To pin a specific version, use a branch or tag:
+To pin a specific version, use a branch or tag (use `plugin` instead of `plugins` on OpenCode 1.x):
 
 ```json
 {
-  "plugin": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.0"]
+  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.2"]
 }
 ```
 
 ## How It Works
 
-The plugin does two things:
+One default export supports both OpenCode plugin APIs.
 
-1. **Injects bootstrap context** via the `experimental.chat.system.transform` hook, adding RubyPowers awareness to every conversation.
-2. **Registers the skills directory** via the `config` hook, so OpenCode discovers all RubyPowers skills without symlinks or manual config.
+On OpenCode 2.x (`setup`):
+
+1. **Registers every skill** in `skills/` with `ctx.skill.transform`.
+2. **Injects bootstrap context** into the system prompt of each model request with the `context` session hook.
+3. **Keeps the handoff across compaction** with the `compaction` session hook. It writes the handoff document and adds it to the compaction request, so the summary keeps it.
+
+On OpenCode 1.x (`server`):
+
+1. **Registers the skills directory** via the `config` hook.
+2. **Injects bootstrap context** into the first user message via the `experimental.chat.messages.transform` hook.
+3. **Writes and restores the handoff** via the `experimental.session.compacting` and `session.compacted` hooks.
 
 ### Tool Mapping
 
@@ -117,8 +136,8 @@ Skills written for Claude Code are automatically adapted for OpenCode:
 ### Plugin not loading
 
 1. Check OpenCode logs: `opencode run --print-logs "hello" 2>&1 | grep -i rubypowers`
-2. Verify the plugin line in your `opencode.json` is correct
-3. Make sure you're running a recent version of OpenCode
+2. Verify the plugin line in your `opencode.json` is correct. OpenCode 2.x reads `plugins`, 1.x reads `plugin`.
+3. Make sure you're running OpenCode 2.x, or 1.18.29 or newer
 
 ### Skills not found
 
@@ -128,7 +147,7 @@ Skills written for Claude Code are automatically adapted for OpenCode:
 
 ### Bootstrap not appearing
 
-1. Check OpenCode version supports `experimental.chat.system.transform` hook
+1. Check that the plugin is loading (see above)
 2. Restart OpenCode after config changes
 
 ## Getting Help

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# bump-version.sh — bump version numbers across all declared files,
+# bump-version.sh — bump version numbers across all declared files
+# (JSON fields or "{version}" text patterns, see .version-bump.json),
 # with drift detection and repo-wide audit for missed files.
 #
 # Usage:
@@ -40,10 +41,59 @@ write_json_field() {
   jq "$jq_path = \"$value\"" "$file" > "$tmp" && mv "$tmp" "$file"
 }
 
+# Turn a text pattern like "rubypowers.git#v{version}" into a regex that
+# captures the version in group 1.
+pattern_regex() {
+  local pattern="$1"
+  local escaped
+  escaped=$(printf '%s' "$pattern" | sed -E 's/[][\.^$*+?(){}|\/]/\\&/g')
+  printf '%s' "${escaped//\\\{version\\\}/([0-9]+\\.[0-9]+\\.[0-9]+[A-Za-z0-9.-]*)}"
+}
+
+# Read the version from a text file using a "{version}" pattern.
+# Prints the first match, or "NOT FOUND" when the pattern does not occur.
+read_text_pattern() {
+  local file="$1" pattern="$2"
+  local regex
+  regex=$(pattern_regex "$pattern")
+  local ver
+  ver=$(sed -nE "s/.*${regex}.*/\1/p" "$file" | head -1)
+  printf '%s' "${ver:-NOT FOUND}"
+}
+
+# Replace every occurrence of a "{version}" pattern in a text file.
+write_text_pattern() {
+  local file="$1" pattern="$2" value="$3"
+  local regex
+  regex=$(pattern_regex "$pattern")
+  local replacement="${pattern//\{version\}/$value}"
+  local tmp="${file}.tmp"
+  sed -E "s/${regex}/${replacement//\//\\/}/g" "$file" > "$tmp" && mv "$tmp" "$file"
+}
+
+# Read a version from a declared file, JSON field or text pattern.
+read_version() {
+  local file="$1" kind="$2" spec="$3"
+  case "$kind" in
+    field) read_json_field "$file" "$spec" ;;
+    pattern) read_text_pattern "$file" "$spec" ;;
+  esac
+}
+
+# Write a version to a declared file, JSON field or text pattern.
+write_version() {
+  local file="$1" kind="$2" spec="$3" value="$4"
+  case "$kind" in
+    field) write_json_field "$file" "$spec" "$value" ;;
+    pattern) write_text_pattern "$file" "$spec" "$value" ;;
+  esac
+}
+
 # Read the list of declared files from config.
-# Outputs lines of "path<TAB>field"
+# Outputs lines of "path<TAB>kind<TAB>spec" where kind is "field" (JSON
+# dot-path) or "pattern" (plain text containing "{version}").
 declared_files() {
-  jq -r '.files[] | "\(.path)\t\(.field)"' "$CONFIG"
+  jq -r '.files[] | if .field then "\(.path)\tfield\t\(.field)" else "\(.path)\tpattern\t\(.pattern)" end' "$CONFIG"
 }
 
 # Read the audit exclude patterns from config.
@@ -60,16 +110,16 @@ cmd_check() {
   echo "Version check:"
   echo ""
 
-  while IFS=$'\t' read -r path field; do
+  while IFS=$'\t' read -r path kind spec; do
     local fullpath="$REPO_ROOT/$path"
     if [[ ! -f "$fullpath" ]]; then
-      printf "  %-45s  MISSING\n" "$path ($field)"
+      printf "  %-55s  MISSING\n" "$path ($spec)"
       has_drift=1
       continue
     fi
     local ver
-    ver=$(read_json_field "$fullpath" "$field")
-    printf "  %-45s  %s\n" "$path ($field)" "$ver"
+    ver=$(read_version "$fullpath" "$kind" "$spec")
+    printf "  %-55s  %s\n" "$path ($spec)" "$ver"
     versions+=("$ver")
   done < <(declared_files)
 
@@ -99,9 +149,9 @@ cmd_audit() {
   # Determine the current version (most common across declared files)
   local current_version
   current_version=$(
-    while IFS=$'\t' read -r path field; do
+    while IFS=$'\t' read -r path kind spec; do
       local fullpath="$REPO_ROOT/$path"
-      [[ -f "$fullpath" ]] && read_json_field "$fullpath" "$field"
+      [[ -f "$fullpath" ]] && read_version "$fullpath" "$kind" "$spec"
     done < <(declared_files) | sort | uniq -c | sort -rn | head -1 | awk '{print $2}'
   )
 
@@ -124,7 +174,7 @@ cmd_audit() {
 
   # Get list of declared paths for comparison
   local -a declared_paths=()
-  while IFS=$'\t' read -r path _field; do
+  while IFS=$'\t' read -r path _kind _spec; do
     declared_paths+=("$path")
   done < <(declared_files)
 
@@ -175,16 +225,16 @@ cmd_bump() {
   echo "Bumping all declared files to $new_version..."
   echo ""
 
-  while IFS=$'\t' read -r path field; do
+  while IFS=$'\t' read -r path kind spec; do
     local fullpath="$REPO_ROOT/$path"
     if [[ ! -f "$fullpath" ]]; then
       echo "  SKIP (missing): $path"
       continue
     fi
     local old_ver
-    old_ver=$(read_json_field "$fullpath" "$field")
-    write_json_field "$fullpath" "$field" "$new_version"
-    printf "  %-45s  %s -> %s\n" "$path ($field)" "$old_ver" "$new_version"
+    old_ver=$(read_version "$fullpath" "$kind" "$spec")
+    write_version "$fullpath" "$kind" "$spec" "$new_version"
+    printf "  %-55s  %s -> %s\n" "$path ($spec)" "$old_ver" "$new_version"
   done < <(declared_files)
 
   echo ""
