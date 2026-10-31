@@ -17,7 +17,7 @@
   and `requesting-code-review` now say "Agent tool" instead of "Task tool". The
   OpenCode bootstrap and install docs list `Agent` (formerly `Task`). The
   subagent-driven-development integration test counts both `Agent` and `Task`
-  calls, so it passes on current Claude Code. The dispatching-parallel-agents
+  calls, so it no longer counts 0 subagents on current Claude Code. The dispatching-parallel-agents
   trigger prompt uses Rails test files. (#29)
 
 ## [8.0.2] - 2026-10-29

@@ -6,8 +6,8 @@ Skills use Claude Code tool names. When you encounter these in a skill, use your
 |-----------------|------------------|
 | `Agent` tool, formerly `Task` (dispatch subagent) | `spawn_agent` (see [Named agent dispatch](#named-agent-dispatch)) |
 | Multiple `Agent` / `Task` calls (parallel) | Multiple `spawn_agent` calls |
-| Task returns result | `wait` |
-| Task completes automatically | `close_agent` to free slot |
+| Agent returns result | `wait` |
+| Agent completes automatically | `close_agent` to free slot |
 | `TodoWrite` (task tracking) | `update_plan` |
 | `Skill` tool (invoke a skill) | Skills load natively — just follow the instructions |
 | `Read`, `Write`, `Edit` (files) | Use your native file tools |
