@@ -102,7 +102,7 @@ To pin a specific version, use a branch or tag (use `plugin` instead of `plugins
 
 ```json
 {
-  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.3"]
+  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.1.0"]
 }
 ```
 

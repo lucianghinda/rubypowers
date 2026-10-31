@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [8.1.0] - 2026-10-31
+
 ### Changed
 
 - **dispatching-parallel-agents — Ruby examples**: The examples were
