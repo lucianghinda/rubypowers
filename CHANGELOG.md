@@ -11,7 +11,7 @@
   name, and says to send all calls in one message so they run in parallel. The
   body now says "2+" test files to match the description. The dated "Real-World
   Impact" section is removed. The Codex, Copilot, and Gemini tool maps now list
-  `Agent` next to `Task`.
+  `Agent` next to `Task`. (#29)
 
 ## [8.0.2] - 2026-10-29
 
