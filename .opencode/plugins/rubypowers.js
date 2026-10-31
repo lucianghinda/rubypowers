@@ -57,7 +57,7 @@ const getBootstrapContent = () => {
   const toolMapping = `**Tool Mapping for OpenCode:**
 When skills reference tools you don't have, substitute OpenCode equivalents:
 - \`TodoWrite\` → \`todowrite\`
-- \`Task\` tool with subagents → Use OpenCode's subagent system (@mention)
+- \`Agent\` tool (formerly \`Task\`) with subagents → Use OpenCode's subagent system (@mention)
 - \`Skill\` tool → OpenCode's native \`skill\` tool
 - \`Read\`, \`Write\`, \`Edit\`, \`Bash\` → Your native tools
 

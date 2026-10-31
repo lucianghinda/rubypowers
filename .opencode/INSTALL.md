@@ -95,7 +95,7 @@ To pin a specific version (use `plugin` instead of `plugins` on OpenCode 1.x):
 
 When skills reference Claude Code tools:
 - `TodoWrite` → `todowrite`
-- `Task` with subagents → `@mention` syntax
+- `Agent` (formerly `Task`) with subagents → `@mention` syntax
 - `Skill` tool → OpenCode's native `skill` tool
 - File operations → your native tools
 

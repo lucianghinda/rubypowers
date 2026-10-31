@@ -194,9 +194,9 @@ else
 fi
 echo ""
 
-# Test 2: Subagents were used (Task tool)
+# Test 2: Subagents were used (Agent tool, formerly Task)
 echo "Test 2: Subagents dispatched..."
-task_count=$(grep -c '"name":"Task"' "$SESSION_FILE" || echo "0")
+task_count=$(grep -cE '"name":"(Agent|Task)"' "$SESSION_FILE" || echo "0")
 if [ "$task_count" -ge 2 ]; then
     echo "  [PASS] $task_count subagents dispatched"
 else

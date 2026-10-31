@@ -12,6 +12,13 @@
   body now says "2+" test files to match the description. The dated "Real-World
   Impact" section is removed. The Codex, Copilot, and Gemini tool maps now list
   `Agent` next to `Task`. (#29)
+- **`Agent` tool name everywhere**: The reviewer and implementer prompt
+  templates (`brainstorming`, `writing-plans`, `subagent-driven-development`)
+  and `requesting-code-review` now say "Agent tool" instead of "Task tool". The
+  OpenCode bootstrap and install docs list `Agent` (formerly `Task`). The
+  subagent-driven-development integration test counts both `Agent` and `Task`
+  calls, so it passes on current Claude Code. The dispatching-parallel-agents
+  trigger prompt uses Rails test files. (#29)
 
 ## [8.0.2] - 2026-10-29
 

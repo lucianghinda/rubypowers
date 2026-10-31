@@ -40,8 +40,8 @@ When a skill says to dispatch a named agent type:
 
 | Skill instruction | Codex equivalent |
 |-------------------|------------------|
-| `Task tool (rubypowers:code-reviewer)` | `spawn_agent(agent_type="worker", message=...)` with `code-reviewer.md` content |
-| `Task tool (general-purpose)` with inline prompt | `spawn_agent(message=...)` with the same prompt |
+| `Agent tool (rubypowers:code-reviewer)` | `spawn_agent(agent_type="worker", message=...)` with `code-reviewer.md` content |
+| `Agent tool (general-purpose)` with inline prompt | `spawn_agent(message=...)` with the same prompt |
 
 ### Message framing
 
