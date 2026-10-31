@@ -9,7 +9,7 @@ Use this template when dispatching a spec document reviewer subagent.
 `docs/superpowers/specs/` folder for legacy projects.
 
 ```
-Task tool (general-purpose):
+Agent tool (general-purpose):
   description: "Review spec document"
   prompt: |
     You are a spec document reviewer. Verify this spec is complete and ready for planning.

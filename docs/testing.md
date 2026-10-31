@@ -56,7 +56,7 @@ The integration test verifies the `subagent-driven-development` skill correctly:
 2. **Execution**: Runs Claude Code in headless mode with the skill
 3. **Verification**: Parses the session transcript (`.jsonl` file) to verify:
    - Skill tool was invoked
-   - Subagents were dispatched (Task tool)
+   - Subagents were dispatched (Agent tool, formerly Task)
    - TodoWrite was used for tracking
    - Implementation files were created
    - Tests pass

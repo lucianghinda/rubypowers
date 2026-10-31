@@ -1,5 +1,20 @@
 # RubyPowers Release Notes
 
+## v8.1.0 (2026-10-31)
+
+### Changes
+
+- **dispatching-parallel-agents uses Ruby examples** — the examples are now
+  Minitest files from a Rails app instead of TypeScript files. The body says
+  "2+" test files to match the description, and the dated session story is
+  removed.
+- **`Agent` tool name** — skills and prompt templates say "Agent tool"
+  instead of the old "Task tool". The Codex, Copilot, Gemini, and OpenCode
+  tool maps list `Agent` and still accept `Task`.
+- **Integration test fix** — the subagent-driven-development test counts both
+  `Agent` and `Task` calls.
+- **OpenCode package pin** — the installation guide now pins version `v8.1.0`.
+
 ## v8.0.2 (2026-10-29)
 
 ### Fixes

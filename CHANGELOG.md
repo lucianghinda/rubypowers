@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+## [8.1.0] - 2026-10-31
+
+### Changed
+
+- **dispatching-parallel-agents — Ruby examples**: The examples were
+  TypeScript test files from the upstream project. They are now Minitest files
+  from a Rails app (time zone math, a job argument bug, `sleep` in a controller
+  test). The dispatch example uses the `Agent` tool instead of the old `Task`
+  name, and says to send all calls in one message so they run in parallel. The
+  body now says "2+" test files to match the description. The dated "Real-World
+  Impact" section is removed. The Codex, Copilot, and Gemini tool maps now list
+  `Agent` next to `Task`. (#29)
+- **`Agent` tool name everywhere**: The reviewer and implementer prompt
+  templates (`brainstorming`, `writing-plans`, `subagent-driven-development`)
+  and `requesting-code-review` now say "Agent tool" instead of "Task tool". The
+  OpenCode bootstrap and install docs list `Agent` (formerly `Task`). The
+  subagent-driven-development integration test counts both `Agent` and `Task`
+  calls, so it no longer counts 0 subagents on current Claude Code. The dispatching-parallel-agents
+  trigger prompt uses Rails test files. (#29)
+
 ## [8.0.2] - 2026-10-29
 
 ### Fixed

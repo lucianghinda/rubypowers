@@ -12,9 +12,9 @@ Skills use Claude Code tool names. When you encounter these in a skill, use your
 | `Glob` (search files by name) | `glob` |
 | `Skill` tool (invoke a skill) | `skill` |
 | `WebFetch` | `web_fetch` |
-| `Task` tool (dispatch subagent) | `task` (see [Agent types](#agent-types)) |
-| Multiple `Task` calls (parallel) | Multiple `task` calls |
-| Task status/output | `read_agent`, `list_agents` |
+| `Agent` tool, formerly `Task` (dispatch subagent) | `task` (see [Agent types](#agent-types)) |
+| Multiple `Agent` / `Task` calls (parallel) | Multiple `task` calls |
+| Agent status/output | `read_agent`, `list_agents` |
 | `TodoWrite` (task tracking) | `sql` with built-in `todos` table |
 | `WebSearch` | No equivalent — use `web_fetch` with a search engine URL |
 | `EnterPlanMode` / `ExitPlanMode` | No equivalent — stay in the main session |

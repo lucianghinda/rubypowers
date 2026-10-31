@@ -74,7 +74,7 @@ To pin a specific version (use `plugin` instead of `plugins` on OpenCode 1.x):
 
 ```json
 {
-  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.0.3"]
+  "plugins": ["rubypowers@git+https://github.com/lucianghinda/rubypowers.git#v8.1.0"]
 }
 ```
 
@@ -95,7 +95,7 @@ To pin a specific version (use `plugin` instead of `plugins` on OpenCode 1.x):
 
 When skills reference Claude Code tools:
 - `TodoWrite` → `todowrite`
-- `Task` with subagents → `@mention` syntax
+- `Agent` (formerly `Task`) with subagents → `@mention` syntax
 - `Skill` tool → OpenCode's native `skill` tool
 - File operations → your native tools
 
