@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Changed
+
+- **dispatching-parallel-agents — Ruby examples**: The examples were
+  TypeScript test files from the upstream project. They are now Minitest files
+  from a Rails app (time zone math, a job argument bug, `sleep` in a controller
+  test). The dispatch example uses the `Agent` tool instead of the old `Task`
+  name, and says to send all calls in one message so they run in parallel. The
+  body now says "2+" test files to match the description. The dated "Real-World
+  Impact" section is removed. The Codex, Copilot, and Gemini tool maps now list
+  `Agent` next to `Task`.
+
 ## [8.0.2] - 2026-10-29
 
 ### Fixed

@@ -34,7 +34,7 @@ digraph when_to_use {
 ```
 
 **Use when:**
-- 3+ test files failing with different root causes
+- 2+ test files failing with different root causes
 - Multiple subsystems broken independently
 - Each problem can be understood without context from others
 - No shared state between investigations
@@ -49,11 +49,11 @@ digraph when_to_use {
 ### 1. Identify Independent Domains
 
 Group failures by what's broken:
-- File A tests: Tool approval flow
-- File B tests: Batch completion behavior
-- File C tests: Abort functionality
+- `test/models/subscription_test.rb`: Renewal date calculation
+- `test/jobs/invoice_delivery_job_test.rb`: Invoice email delivery
+- `test/controllers/imports_controller_test.rb`: CSV import flow
 
-Each domain is independent - fixing tool approval doesn't affect abort tests.
+Each domain is independent - fixing renewal dates doesn't affect invoice delivery.
 
 ### 2. Create Focused Agent Tasks
 
@@ -65,12 +65,13 @@ Each agent gets:
 
 ### 3. Dispatch in Parallel
 
-```typescript
-// In Claude Code / AI environment
-Task("Fix agent-tool-abort.test.ts failures")
-Task("Fix batch-completion-behavior.test.ts failures")
-Task("Fix tool-approval-race-conditions.test.ts failures")
-// All three run concurrently
+Send all `Agent` tool calls in **one message**. Calls sent in separate messages run one after another.
+
+```
+Agent(description: "Fix subscription_test.rb", prompt: "...")
+Agent(description: "Fix invoice_delivery_job_test.rb", prompt: "...")
+Agent(description: "Fix imports_controller_test.rb", prompt: "...")
+# All three run concurrently
 ```
 
 ### 4. Review and Integrate
@@ -89,30 +90,31 @@ Good agent prompts are:
 3. **Specific about output** - What should the agent return?
 
 ```markdown
-Fix the 3 failing tests in src/agents/agent-tool-abort.test.ts:
+Fix the 3 failing tests in test/models/subscription_test.rb:
 
-1. "should abort tool with partial output capture" - expects 'interrupted at' in message
-2. "should handle mixed completed and aborted tools" - fast tool aborted instead of completed
-3. "should properly track pendingToolCount" - expects 3 results but gets 0
+1. "renews on the same day next month" - expected 2026-03-31, got 2026-03-30
+2. "renewal date ignores the user's time zone" - off by one day near midnight
+3. "trial ends after 14 days" - passes locally, fails on CI
 
-These are timing/race condition issues. Your task:
+These look like time and time zone issues. Your task:
 
 1. Read the test file and understand what each test verifies
-2. Identify root cause - timing issues or actual bugs?
+2. Identify root cause - test setup or actual bugs in Subscription?
 3. Fix by:
-   - Replacing arbitrary timeouts with event-based waiting
-   - Fixing bugs in abort implementation if found
-   - Adjusting test expectations if testing changed behavior
+   - Freezing time with `travel_to` instead of relying on the real clock
+   - Using `Time.current` / `Date.current` instead of `Time.now` / `Date.today`
+   - Fixing bugs in the renewal calculation if found
 
-Do NOT just increase timeouts - find the real issue.
+Do NOT add `sleep`, retries, or loosen assertions - find the real issue.
+Run only this file: bin/rails test test/models/subscription_test.rb
 
-Return: Summary of what you found and what you fixed.
+Return: Summary of the root cause and what you changed.
 ```
 
 ## Common Mistakes
 
 **❌ Too broad:** "Fix all the tests" - agent gets lost
-**✅ Specific:** "Fix agent-tool-abort.test.ts" - focused scope
+**✅ Specific:** "Fix subscription_test.rb" - focused scope
 
 **❌ No context:** "Fix the race condition" - agent doesn't know where
 **✅ Context:** Paste the error messages and test names
@@ -130,30 +132,30 @@ Return: Summary of what you found and what you fixed.
 **Exploratory debugging:** You don't know what's broken yet
 **Shared state:** Agents would interfere (editing same files, using same resources)
 
-## Real Example from Session
+## Example
 
-**Scenario:** 6 test failures across 3 files after major refactoring
+**Scenario:** 6 test failures across 3 files after a Rails upgrade
 
 **Failures:**
-- agent-tool-abort.test.ts: 3 failures (timing issues)
-- batch-completion-behavior.test.ts: 2 failures (tools not executing)
-- tool-approval-race-conditions.test.ts: 1 failure (execution count = 0)
+- subscription_test.rb: 3 failures (time zone and date math)
+- invoice_delivery_job_test.rb: 2 failures (email never delivered)
+- imports_controller_test.rb: 1 failure (imported row count = 0)
 
-**Decision:** Independent domains - abort logic separate from batch completion separate from race conditions
+**Decision:** Independent domains - date math separate from email delivery separate from imports
 
 **Dispatch:**
 ```
-Agent 1 → Fix agent-tool-abort.test.ts
-Agent 2 → Fix batch-completion-behavior.test.ts
-Agent 3 → Fix tool-approval-race-conditions.test.ts
+Agent 1 → Fix subscription_test.rb
+Agent 2 → Fix invoice_delivery_job_test.rb
+Agent 3 → Fix imports_controller_test.rb
 ```
 
 **Results:**
-- Agent 1: Replaced timeouts with event-based waiting
-- Agent 2: Fixed event structure bug (threadId in wrong place)
-- Agent 3: Added wait for async tool execution to complete
+- Agent 1: Replaced `Date.today` with `Date.current` and froze time with `travel_to`
+- Agent 2: Fixed argument bug - job was enqueued with `invoice.id` but `perform` expected an `Invoice`
+- Agent 3: Replaced `sleep 1` with `perform_enqueued_jobs` so the import job runs inside the test
 
-**Integration:** All fixes independent, no conflicts, full suite green
+**Integration:** All fixes independent, no conflicts, `bin/rails test` green
 
 **Time saved:** 3 problems solved in parallel vs sequentially
 
@@ -171,12 +173,3 @@ After agents return:
 2. **Check for conflicts** - Did agents edit same code?
 3. **Run full suite** - Verify all fixes work together
 4. **Spot check** - Agents can make systematic errors
-
-## Real-World Impact
-
-From debugging session (2025-10-03):
-- 6 failures across 3 files
-- 3 agents dispatched in parallel
-- All investigations completed concurrently
-- All fixes integrated successfully
-- Zero conflicts between agent changes
