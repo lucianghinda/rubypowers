@@ -1,6 +1,7 @@
 ---
 name: ruby-upgrade
-description: Use when upgrading the Ruby interpreter version of a Bundler/Rails app — especially "upgrade to Ruby 4", "bump Ruby to 4.0", "audit Ruby 4 compatibility", "what breaks on Ruby 4", or a specific target like "Ruby 4.0.5". Triggers on Ruby-major risk symptoms: CGI.parse/CGI::Cookie removal, Net::HTTP implicit Content-Type dropped, demoted default gems (ostruct/logger/benchmark/irb), SortedSet, Set#inspect changes, native-extension recompile crashes, openssl 4 pins, and error-tracker fingerprint drift. Also fires on ".ruby-version bump" and "ruby major upgrade". For Rails framework version bumps (6.x/7.x/8.x, config.load_defaults) use the rails-upgrade skill instead.
+description: >-
+  Use when upgrading the Ruby interpreter version of a Bundler/Rails app — especially "upgrade to Ruby 4", "bump Ruby to 4.0", "audit Ruby 4 compatibility", "what breaks on Ruby 4", or a specific target like "Ruby 4.0.5". Triggers on Ruby-major risk symptoms: CGI.parse/CGI::Cookie removal, Net::HTTP implicit Content-Type dropped, demoted default gems (ostruct/logger/benchmark/irb), SortedSet, Set#inspect changes, native-extension recompile crashes, openssl 4 pins, and error-tracker fingerprint drift. Also fires on ".ruby-version bump" and "ruby major upgrade". For Rails framework version bumps (6.x/7.x/8.x, config.load_defaults) use the rails-upgrade skill instead.
 ---
 
 # Ruby Upgrade
